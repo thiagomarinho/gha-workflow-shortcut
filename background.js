@@ -18,6 +18,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       const githubWorkflowUrl = parseGithubWorkflowReference(info.selectionText);
 
       // Open the constructed workflow URL in a new tab
+      console.log('Opening new tab');
       chrome.tabs.create({ url: githubWorkflowUrl });
     } else {
       // If the text doesn't match, show an alert (or handle the error)
@@ -41,8 +42,11 @@ function parseGithubWorkflowReference(text) {
   }
 
   const githubRef = text.split('@')[1];
+  const url = `https://github.com/${repository}/blob/${githubRef}/${pathToWorkflow}`;
 
-  return `https://github.com/${repository}/blob/${githubRef}/${pathToWorkflow}`;
+  console.log(`Github URL: ${url}`);
+
+  return url;
 }
 
 chrome.omnibox.onInputEntered.addListener((text) => {
@@ -52,8 +56,10 @@ chrome.omnibox.onInputEntered.addListener((text) => {
   if (text) {
     const githubWorkflowUrl = parseGithubWorkflowReference(text);
 
+    // Opening in current tab
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs.length > 0) {
+        console.log('Updating current tab');
         chrome.tabs.update(tabs[0].id, { url: githubWorkflowUrl });
       }
     });

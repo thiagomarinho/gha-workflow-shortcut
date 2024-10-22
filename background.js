@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // Handle the context menu click event
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "openWorkflowLink") {
-    const textPattern = /^([a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+\/.*\.yml)@([a-zA-Z0-9-_]+)$/;
+    const textPattern = /^([a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+\/.*\.yml)@([a-zA-Z0-9-_\.]+)$/;
     const match = info.selectionText.match(textPattern);
 
     if (match) {

@@ -11,16 +11,18 @@ chrome.runtime.onInstalled.addListener(() => {
 // Handle the context menu click event
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "openWorkflowLink") {
-    const textPattern = /^([a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+\/.*\.yml)@([a-zA-Z0-9-_\.]+)$/;
+    const textPattern = /^([a-zA-Z0-9-_]+\/[a-zA-Z0-9-_]+\/.*\.(ya?ml))@([a-zA-Z0-9-_\.\/]+)$/;
     const match = info.selectionText.match(textPattern);
 
     if (match) {
+      console.log('URL matched expected github workflow format');
       const githubWorkflowUrl = parseGithubWorkflowReference(info.selectionText);
 
       // Open the constructed workflow URL in a new tab
       console.log('Opening new tab');
       chrome.tabs.create({ url: githubWorkflowUrl });
     } else {
+      console.log("URL didn't match expected github workflow format");
       // If the text doesn't match, show an alert (or handle the error)
       // chrome.tabs.executeScript(tab.id, {
       //   code: 'alert("Selected text does not match the required pattern.")'

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GHA Workflow Shortcut",
   "version": "1.0",
-  "permissions": ["tabs", "activeTab"],
+  "permissions": ["contextMenus", "tabs", "activeTab"],
   "background": {
     "service_worker": "background.js"
   },

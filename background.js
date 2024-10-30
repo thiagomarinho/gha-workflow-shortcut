@@ -59,9 +59,48 @@ function parseReference(text) {
     console.log("URL didn't match expected github action format");
   }
 
+  // git::git@github.com:Github-Org/github-repo?ref=git-ref
+  // git::git@github.com:Github-Org/github-repo//path?ref=git-ref
+  // git::git@github.com:Github-Org/github-repo//modules/path?ref=git-ref
+  // git::https://github.com/hashicorp/terraform-random-tfe-utility//modules/tfe_init?ref=main
+  const terraformModulePattern = /^git::(?:git@|https:\/\/)github\.com(?::|\/)([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)(?:\/\/([A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)*)?)?\?ref=([A-Za-z0-9_.-]+)$/;
+  const isTerraformModule = text.match(terraformModulePattern);
 
+  if (isTerraformModule) {
+    console.log('URL matched expected terraform module format');
+    console.log('call parseTerraformModuleReference');
+    const terraformModuleUrl = parseTerraformModuleReference(text);
+    console.log('called parseTerraformModuleReference');
+
+    if (terraformModuleUrl) {
+      return terraformModuleUrl;
+    } else {
+      console.log(`Failed to build URL from terraform module reference ${text}`);
+    }
+  } else {
+    console.log("URL didn't match expected terraform module format");
+  }
 
   return '';
+}
+
+function parseTerraformModuleReference(text) {
+  const match = text.match(/^git::(?:git@|https:\/\/)github\.com(?::|\/)([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)(?:\/\/([A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)*)?)?\?ref=([A-Za-z0-9_.-]+)$/);
+
+  const repository = `${match[1]}/${match[2]}`;
+
+  const baseUrl = `https://github.com/${repository}/blob/${match[4]}`;
+
+  let url;
+  if (match[3]) {
+    url = `${baseUrl}/${match[3]}`
+  } else {
+    url = baseUrl;
+  }
+
+  console.log(`URL: ${url}`);
+
+  return url;
 }
 
 function parseGithubActionReference(text) {

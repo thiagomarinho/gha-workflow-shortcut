@@ -6,16 +6,26 @@
 
 OR
 
-1. Select the workflow reference:
+1. Select the reference:
 
 ```yaml
+# workflows
 uses: thiagomarinho/gha-workflow-shortcut/.github/workflows/workflow.yml@main
-```
-
-```yaml
 uses: thiagomarinho/gha-workflow-shortcut/.github/workflows/workflow.yml@v1.0.0
+
+# actions
+uses: thiagomarinho/gha-workflow-shortcut@main
+uses: actions/checkout@v4
 ```
 
-2. Right-click it;
+```hcl
+# terraform modules
+module "my_module" {
+  source = "git::git@github.com:Github-Org/github-repo?ref=git-ref"
+  # ...
+}
+```
+
+2. Right-click on it;
 
 3. Click on "Open workflow link"!
